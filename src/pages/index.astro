@@ -1,0 +1,47 @@
+---
+import Layout from "~/layouts/PageLayout.astro";
+import HeroSection from "~/components/widgets/home/HeroSection.astro";
+import MissionSection from "~/components/widgets/home/MissionSection.astro";
+import ProjectSection from "~/components/widgets/home/ProjectSection.astro";
+import AboutUsSection from "~/components/widgets/apropos/AboutUs.astro";
+import MissionsSection from "~/components/widgets/apropos/Missions.astro";
+import ValuesSection from "~/components/widgets/apropos/Values.astro";
+import TestimonySection from "~/components/widgets/home/TestimonySection.astro";
+import PartenaireSection from "~/components/widgets/home/PartenaireSection.astro";
+import VideoSection from "~/components/widgets/home/VideoSection.astro";
+
+const metadata = {
+  title:
+    "Africtivistes CitizenLab Benin  — Votre plateforme d'informations citoyenne",
+  ignoreTitleTemplate: true,
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero Section -->
+  <HeroSection />
+
+  <!-- Video Section -->
+  <VideoSection /> 
+
+  <!-- Mission Section  -->
+  <MissionSection />
+
+ <!-- Qui sommes-nous - Section -->
+  <AboutUsSection />
+
+  <!-- Notre Mission - Section -->
+  <MissionsSection />
+
+  <!-- Nos Valeurs - Section -->
+  <ValuesSection />
+
+  <!-- Brands / Partners Section -->
+  <PartenaireSection/>
+
+  <!-- Testimony Section -->
+  <!-- <TestimonySection /> -->
+
+</Layout>
+
+

@@ -1,0 +1,386 @@
+---
+import Layout from "~/layouts/PageLayout.astro";
+import Banner from "~/components/widgets/Banner.astro";
+import videos_img from "~/assets/images/videos_img.jpg";
+import video from "~/assets/images/video.jpg"
+import { Image } from "astro:assets";
+import { getAllVideos, extractVideoUrl } from "~/utils/api.js";
+
+const videos = await getAllVideos();
+
+// Dernière vidéo mise en avant
+const latestVideo = videos?.[0];
+const otherVideos = videos?.slice(1) || [];
+
+const extractVideoContent = extractVideoUrl(latestVideo?.content);
+
+const metadata = {
+  title: "Médiathèque - Vidéos",
+  description:
+    "Découvrez notre collection de vidéos éducatives et inspirantes sur l'engagement citoyen et les technologies au service du bien commun.",
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- Banner -->
+  <Banner title={metadata.title} subtitle={metadata.description}>
+    <Image
+      src={videos_img}
+      alt="Nos vidéos"
+      class="w-full h-full object-cover absolute inset-0 border-0 z-0 scale-110 transition-transform duration-700"
+    />
+  </Banner>
+
+  <!-- Hero Section avec vidéo mise en avant -->
+  {latestVideo && (
+    <section class="relative bg-[#0a0a0a] text-white overflow-hidden">
+      <!-- Background Elements -->
+      <div class="absolute inset-0">
+        <div class="absolute top-0 left-1/4 w-[600px] h-[600px] bg-green-500/10 rounded-full blur-[150px]"></div>
+        <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-yellow-500/10 rounded-full blur-[120px]"></div>
+        <div class="absolute inset-0 opacity-[0.02]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;1&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+      </div>
+
+      <div class="relative z-10 max-w-screen-xl mx-auto px-6 md:px-12 py-16 md:py-24">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          
+          <!-- Left: Info -->
+          <div class="order-2 lg:order-1">
+            <div class="flex items-center gap-3 mb-6">
+              <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              </span>
+              <span class="text-green-400 text-sm font-bold uppercase tracking-wider">Dernière vidéo</span>
+            </div>
+
+            <h2 class="text-3xl md:text-4xl lg:text-5xl font-black leading-tight mb-6" set:html={latestVideo.title} />
+
+            {latestVideo.excerpt && (
+              <div class="text-white/60 text-lg leading-relaxed mb-8 line-clamp-3" set:html={latestVideo.excerpt} />
+            )}
+
+            <div class="flex flex-wrap items-center gap-6 mb-8">
+              <div class="flex items-center gap-2 text-white/50">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                </svg>
+                <span class="text-sm">
+                  {new Date(latestVideo.date).toLocaleDateString("fr-FR", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </span>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-4">
+              <button 
+                id="play-latest-btn"
+                class="inline-flex items-center gap-3 px-8 py-4 bg-green-500 hover:bg-green-700 text-white font-bold rounded-full transition-all duration-300 shadow-lg shadow-green-500/30 group"
+              >
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                Regarder maintenant
+              </button>
+              
+              <a 
+                href={`/videos/${latestVideo.slug}`}
+                class="inline-flex items-center gap-2 px-6 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-full transition-all duration-300 border border-white/20"
+              >
+                Plus de détails
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right: Video Player / Thumbnail -->
+          <div class="order-1 lg:order-2">
+            <div class="relative" id="latest-video-container">
+              <!-- Glow -->
+              <div class="absolute inset-0 bg-gradient-to-br from-yellow-500/30 to-green-500/30 rounded-2xl blur-2xl scale-105 opacity-60"></div>
+              
+              <!-- Thumbnail (avant lecture) -->
+              <div id="latest-video-thumbnail" class="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl cursor-pointer group">
+                {latestVideo.featuredImage?.node?.mediaItemUrl ? (
+                  <img
+                    src={latestVideo.featuredImage.node.mediaItemUrl || video}
+                    alt={latestVideo.featuredImage.node.altText || latestVideo.title}
+                    class="w-full aspect-video object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                ) : (
+                  <div class="w-full aspect-video bg-gradient-to-br from-yellow-900 to-green-900 flex items-center justify-center">
+                    <svg class="w-20 h-20 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                )}
+
+                <!-- Play Button Overlay -->
+                <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+                  <div class="w-20 h-20 rounded-full bg-white/90 flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-green-500 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Badge -->
+                <div class="absolute bottom-4 right-4 px-3 py-1 bg-black/80 backdrop-blur-sm rounded text-white text-sm font-bold">
+                  ▶ Cliquez pour lire
+                </div>
+              </div>
+
+              <!-- Player (après clic) - caché par défaut -->
+              <div id="latest-video-player" class="hidden relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl aspect-video bg-black">
+                <!-- Le contenu vidéo sera injecté ici -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="flex items-center justify-center gap-12 mt-16 pt-12 border-t border-white/10">
+          <div class="text-center">
+            <span class="block text-4xl font-black text-white">{videos.length}</span>
+            <span class="text-white/50 text-sm">Vidéos</span>
+          </div>
+          <div class="w-px h-12 bg-white/10"></div>
+          <div class="text-center">
+            <span class="block text-4xl font-black text-green-400">HD</span>
+            <span class="text-white/50 text-sm">Qualité</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Script pour lire la vidéo directement -->
+  <script define:vars={{ videoContent: extractVideoContent || '' }}>
+    document.addEventListener('DOMContentLoaded', () => {
+      const thumbnail = document.getElementById('latest-video-thumbnail');
+      const player = document.getElementById('latest-video-player');
+      const playBtn = document.getElementById('play-latest-btn');
+
+      function playVideo() {
+        if (!thumbnail || !player) return;
+
+        // Extraire l'iframe YouTube/Vimeo du contenu
+        let content = videoContent;
+
+        // Ajouter autoplay à l'iframe
+        if (content.includes('youtube.com') || content.includes('youtu.be')) {
+          // Extraire l'ID YouTube
+          const youtubeMatch = content.match(/(?:youtube\.com\/(?:embed\/|watch\?v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+          if (youtubeMatch) {
+            const videoId = youtubeMatch[1];
+            content = `<iframe 
+              src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen
+              class="w-full h-full absolute inset-0"
+            ></iframe>`;
+          }
+        } else if (content.includes('vimeo.com')) {
+          // Extraire l'ID Vimeo
+          const vimeoMatch = content.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+          if (vimeoMatch) {
+            const videoId = vimeoMatch[1];
+            content = `<iframe 
+              src="https://player.vimeo.com/video/${videoId}?autoplay=1" 
+              frameborder="0" 
+              allow="autoplay; fullscreen; picture-in-picture" 
+              allowfullscreen
+              class="w-full h-full absolute inset-0"
+            ></iframe>`;
+          }
+        }
+
+        // Injecter le player
+        player.innerHTML = `<div class="relative w-full h-full">${content}</div>`;
+
+        // Afficher le player, cacher la thumbnail
+        thumbnail.classList.add('hidden');
+        player.classList.remove('hidden');
+      }
+
+      // Event listeners
+      if (thumbnail) {
+        thumbnail.addEventListener('click', playVideo);
+      }
+      if (playBtn) {
+        playBtn.addEventListener('click', playVideo);
+      }
+    });
+  </script>
+
+  <!-- Section Toutes les vidéos -->
+  <section class="py-16 md:py-24 bg-[#f8f8f6]">
+    <div class="max-w-screen-xl mx-auto px-6 md:px-12">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-1 bg-gradient-to-r from-green-500 to-yellow-500 rounded-full"></div>
+            <span class="text-green-600 text-sm font-bold uppercase tracking-wider">Collection</span>
+          </div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900">
+            Toutes nos vidéos
+          </h2>
+        </div>
+        
+        <div class="flex items-center gap-2 text-gray-500">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          <span class="font-medium">{videos.length} vidéo{videos.length > 1 ? 's' : ''}</span>
+        </div>
+      </div>
+
+      {videos.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {videos.map((video: any, index: number) => (
+            <a href={`/videos/${video.slug}`} class="group block">
+              <article class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 border border-gray-100">
+                
+                <!-- Thumbnail -->
+                <div class="relative aspect-video overflow-hidden">
+                  {video.featuredImage?.node?.mediaItemUrl ? (
+                    <img
+                      src={video.featuredImage.node.mediaItemUrl || video}
+                      alt={video.featuredImage.node.altText || video.title}
+                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div class="w-full h-full bg-gradient-to-br from-green-500 to-yellow-500 flex items-center justify-center">
+                      <svg class="w-12 h-12 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  )}
+
+                  <!-- Play Overlay -->
+                  <div class="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-all duration-300">
+                    <div class="w-14 h-14 rounded-full bg-white/0 group-hover:bg-white flex items-center justify-center transition-all duration-300 scale-50 group-hover:scale-100 opacity-0 group-hover:opacity-100">
+                      <svg class="w-6 h-6 text-green-500 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <!-- Video Number -->
+                  <div class="absolute top-3 left-3 w-8 h-8 rounded-lg bg-black/70 backdrop-blur-sm flex items-center justify-center">
+                    <span class="text-white text-xs font-bold">{String(index + 1).padStart(2, '0')}</span>
+                  </div>
+
+                  <!-- Gradient Overlay Bottom -->
+                  <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                </div>
+
+                <!-- Content -->
+                <div class="p-5">
+                  <!-- Date -->
+                  {video.date && (
+                    <time class="text-green-500 text-xs font-bold uppercase tracking-wider mb-2 block">
+                      {new Date(video.date).toLocaleDateString("fr-FR", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </time>
+                  )}
+
+                  <!-- Title -->
+                  <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-green-600 transition-colors leading-snug" set:html={video.title} />
+
+                  <!-- Excerpt -->
+                  {video.excerpt && (
+                    <div class="text-gray-500 text-sm line-clamp-2 leading-relaxed" set:html={video.excerpt} />
+                  )}
+                </div>
+
+                <!-- Footer -->
+                <div class="px-5 pb-5">
+                  <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <span class="inline-flex items-center gap-2 text-sm font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
+                      Regarder
+                      <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                      </svg>
+                    </span>
+                    <div class="flex items-center gap-1 text-gray-400">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      <span class="text-xs font-medium">Vidéo</span>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <!-- Empty State -->
+        <div class="text-center py-24 bg-white rounded-3xl border-2 border-dashed border-gray-200">
+          <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-100 flex items-center justify-center">
+            <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-3">
+            Aucune vidéo disponible
+          </h3>
+          <p class="text-gray-500 max-w-md mx-auto">
+            Nos premières vidéos arrivent bientôt. Restez connectés !
+          </p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="relative py-20 bg-gradient-to-br from-green-300 via-green-500  to-green-900 overflow-hidden">
+    <!-- Pattern -->
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-screen-md mx-auto px-6 md:px-12 text-center">
+      <div class="w-16 h-16 mx-auto mb-6 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/30">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
+        </svg>
+      </div>
+      
+      <div class="text-center">
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-4">
+        Abonnez-vous à notre chaîne
+      </h2>
+      </div>
+      <p class="text-lg text-center text-white/80 mb-8 max-w-lg mx-auto">
+        Ne manquez aucune de nos nouvelles vidéos sur l'engagement citoyen et les Civic Tech
+      </p>
+      
+      <a 
+        href="https://youtube.com/@votrechannel" 
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-3 px-8 py-4 bg-white text-red-600 font-bold rounded-full hover:bg-gray-100 transition-colors shadow-xl"
+      >
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+        S'abonner sur YouTube
+      </a>
+    </div>
+  </section>
+</Layout>

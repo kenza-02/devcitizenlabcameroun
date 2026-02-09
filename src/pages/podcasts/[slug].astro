@@ -1,0 +1,317 @@
+---
+import Layout from "~/layouts/PageLayout.astro";
+import { getAllPodcast, extractAudioUrl, extractVideoUrl } from "~/utils/api.js";
+
+// Génération des chemins statiques
+export async function getStaticPaths() {
+  const podcasts = await getAllPodcast();
+
+  return podcasts.map((post: any) => ({
+    params: { slug: post.slug },
+  }));
+}
+
+// Récupération du slug depuis la route
+const { slug } = Astro.params;
+
+// Récupération des podcasts
+const podcasts = await getAllPodcast();
+const podcastPost = podcasts.find((post: any) => post.slug === slug);
+
+if (!podcastPost) {
+  return Astro.redirect('/podcasts');
+}
+
+// Données du podcast
+const podcast = {
+  title: podcastPost.title ?? "Podcast",
+  excerpt: podcastPost.excerpt ?? "",
+  content: podcastPost.content ?? "",
+  date: podcastPost.date
+    ? new Date(podcastPost.date).toLocaleDateString("fr-FR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "",
+  image: podcastPost.featuredImage?.node?.mediaItemUrl ?? null,
+  imageAlt: podcastPost.featuredImage?.node?.altText ?? podcastPost.title ?? "Podcast",
+  type: podcastPost.podcast?.type[0] ?? "video",
+  episodeNumber: podcasts.findIndex((p: any) => p.slug === slug) + 1,
+};
+
+
+const metadata = {
+  title: `${podcast.title} - Podcasts`,
+  description: podcast.excerpt?.replace(/<[^>]*>/g, '').slice(0, 160) || "Écoutez cet épisode de notre podcast.",
+};
+
+---
+
+<Layout metadata={metadata}>
+
+  <!-- Hero Section -->
+  <section class="relative min-h-[60vh] md:min-h-[70vh] bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 overflow-hidden">
+    
+    <!-- Animated Background -->
+    <div class="absolute inset-0">
+      <!-- Gradient Orbs -->
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-green-500/20 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-green-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      
+      <!-- Grid Pattern -->
+      <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px); background-size: 50px 50px;"></div>
+    </div>
+
+    <!-- Sound Wave Animation (decorative) -->
+    <div class="absolute bottom-0 left-0 right-0 h-32 flex items-end justify-center gap-1 opacity-20 overflow-hidden">
+      {Array.from({ length: 50 }).map((_, i) => (
+        <div 
+          class="w-1 bg-gradient-to-t from-green-400 to-transparent rounded-full animate-soundwave"
+          style={`height: ${Math.random() * 100}%; animation-delay: ${i * 0.05}s;`}
+        />
+      ))}
+    </div>
+
+    <div class="relative z-10 max-w-screen-xl mx-auto px-6 md:px-12 py-12">
+      
+      <!-- Navigation -->
+      <nav class="flex items-center justify-between mb-12">
+        <a href="/podcasts" class="group flex items-center gap-3 text-white/60 hover:text-white transition-colors">
+          <div class="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center group-hover:bg-white/20 transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+          </div>
+          <span class="text-sm font-medium">Tous les épisodes</span>
+        </a>
+      </nav>
+
+      <!-- Content Grid -->
+      <div class="grid lg:grid-cols-5 gap-12 items-center">
+        
+        <!-- Left: Episode Info -->
+        <div class="lg:col-span-2 text-white order-2 lg:order-1">
+          
+          <!-- Meta -->
+          <div class="flex flex-wrap items-center gap-3 mb-6">
+            <span class={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${podcast.type === 'audio' ? 'bg-green-500/30 text-green-300' : 'bg-green-500/30 text-green-300'}`}>
+              {podcast.type === 'audio' ? (
+                <>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                  </svg>
+                  Audio
+                </>
+              ) : (
+                <>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  Vidéo
+                </>
+              )}
+            </span>
+            <span class="text-white/50 text-sm">{podcast.date}</span>
+          </div>
+
+          <!-- Episode Number -->
+          <div class="inline-flex items-center gap-2 text-green-400 text-sm font-bold uppercase tracking-wider mb-4">
+            <span class="w-8 h-px bg-green-400"></span>
+            Épisode {String(podcast.episodeNumber).padStart(2, '0')}
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-black leading-tight mb-6" set:html={podcast.title} />
+
+          <!-- Excerpt -->
+          {podcast.content && (
+            <div class="text-white/60 text-lg leading-relaxed mb-8" set:html={podcast.content} />
+          )}
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap gap-4">
+            <a 
+              href="#player"
+              class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-500 to-green-500 hover:from-green-600 hover:to-green-600 text-white font-bold rounded-full transition-all duration-300 shadow-lg shadow-green-500/30"
+            >
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              {podcast.type === 'audio' ? 'Écouter' : 'Regarder'}
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Cover Image -->
+        <div class="lg:col-span-3 order-1 lg:order-2">
+          <div class="relative max-w-lg mx-auto lg:max-w-none">
+            <!-- Glow Effect -->
+            <div class="absolute inset-0 bg-gradient-to-br from-green-500/30 to-green-500/30 rounded-3xl blur-2xl scale-105"></div>
+            
+            <!-- Image -->
+            <div class="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+              {podcast.image ? (
+                <img
+                  src={podcast.image}
+                  alt={podcast.imageAlt}
+                  class="w-full aspect-video object-cover"
+                />
+              ) : (
+                <div class={`w-full aspect-video flex items-center justify-center ${podcast.type === 'audio' ? 'bg-gradient-to-br from-green-600 to-green-800' : 'bg-gradient-to-br from-green-600 to-green-800'}`}>
+                  {podcast.type === 'audio' ? (
+                    <svg class="w-24 h-24 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                    </svg>
+                  ) : (
+                    <svg class="w-24 h-24 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  )}
+                </div>
+              )}
+
+              <!-- Play Overlay -->
+              <a href="#player" class="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors group">
+                <div class="w-20 h-20 rounded-full bg-white/90 flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+                  <svg class="w-8 h-8 text-green-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Player Section -->
+  <section id="player" class="py-16 md:py-24 bg-white">
+    <div class="max-w-screen-xl mx-auto px-6 md:px-12">
+      
+      <!-- Section Header -->
+      <div class="text-center mb-12">
+        <span class="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">
+          {podcast.type === 'audio' ? (
+            <>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+              </svg>
+              Lecteur Audio
+            </>
+          ) : (
+            <>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Lecteur Vidéo
+            </>
+          )}
+        </span>
+        <div class="text-center">
+            <h2 class="text-3xl md:text-4xl text-center font-black text-gray-900">
+          {podcast.type === 'audio' ? 'Écoutez l\'épisode' : 'Regardez l\'épisode'}
+        </h2>
+        </div>
+      </div>
+
+      <!-- Player Container -->
+      <div class="relative max-w-4xl mx-auto">
+        <!-- Decorative Elements -->
+        <div class="absolute -top-4 -left-4 w-16 h-16 border-2 border-green-200 rounded-2xl rotate-6"></div>
+        <div class="absolute -bottom-4 -right-4 w-12 h-12 bg-green-100 rounded-xl -rotate-6"></div>
+
+        <!-- Content Audio Player -->
+        {podcast.type === 'audio' ? ( 
+  <div class="relative rounded-3xl p-1 bg-gradient-to-br from-yellow-200 via-green-300 to-green-500 shadow-2xl">
+    <div class="bg-white rounded-3xl p-5 md:p-6">
+      
+      <!-- Header du lecteur -->
+      <div class="flex items-center gap-4 mb-4">
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 text-green-600">
+          🎧
+        </div>
+        <div>
+          <p class="text-sm text-gray-500">Podcast audio</p>
+          <h3 class="font-semibold text-gray-900">
+            {podcast.title}
+          </h3>
+        </div>
+      </div>
+
+      <!-- Lecteur audio WordPress -->
+      <div class="rounded-xl overflow-hidden bg-gray-50 p-3">
+        <div set:html={extractAudioUrl(podcast.content)} />
+      </div>
+
+    </div>
+  </div>
+) : (
+  <!-- Content Video Player -->
+        <div class="relative bg-gray-50 rounded-3xl p-4 md:p-6 shadow-xl">
+          <div class="bg-white rounded-2xl overflow-hidden shadow-inner">
+            <!-- Le contenu WordPress avec le bloc vidéo/audio -->
+            <div class="podcast-content aspect-video" set:html={extractVideoUrl(podcast.content)} />
+          </div>
+        </div>
+)}
+
+      </div>
+    </div>
+  </section>
+
+
+</Layout>
+
+<style>
+  /* Sound wave animation */
+  @keyframes soundwave {
+    0%, 100% {
+      height: 20%;
+    }
+    50% {
+      height: 100%;
+    }
+  }
+  
+  .animate-soundwave {
+    animation: soundwave 1s ease-in-out infinite;
+  }
+
+  /* Style pour le contenu WordPress (iframe YouTube, etc.) */
+  .podcast-content :global(iframe) {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    border: none;
+  }
+
+  .podcast-content :global(.wp-block-embed),
+  .podcast-content :global(.wp-block-video),
+  .podcast-content :global(.wp-block-audio) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .podcast-content :global(figure) {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .podcast-content :global(.wp-block-embed__wrapper) {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .podcast-content :global(.wp-block-embed__wrapper iframe) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
