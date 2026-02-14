@@ -6,8 +6,8 @@ import { Image } from "astro:assets";
 import teamBanner from "~/assets/images/Equipe.jpeg";
 
 const metadata = {
-  title: 'Equipe - AfricTivistes CitizenLab Bénin',
-  description: "Découvrez les membres et l'univers de l'équipe CitizenLab Bénin : des talents engagés pour renforcer la participation citoyenne.",
+  title: 'Equipe - AfricTivistes CitizenLab Cameroun',
+  description: "Découvrez les membres et l'univers de l'équipe CitizenLab Cameroun : des talents engagés pour renforcer la participation citoyenne.",
 };
 
 const members = await getAllMembers();
@@ -15,18 +15,17 @@ const members = await getAllMembers();
 
 <Layout metadata={metadata}>
   <!-- Hero Banner -->
-  <section class="relative isolate overflow-hidden min-h-[800px] md:min-h-[900px] lg:min-h-[1000px]">
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0">
       <Image
         src={teamBanner}
-        alt="Équipe CitizenLab Bénin"
+        alt="Équipe CitizenLab Cameroun"
         class="h-full w-full object-cover"
-        width={1920}
-        height={960}
+        widths={[400, 768, 1024, 2040]}
         loading="eager"
         decoding="async"
     />
-  </div>
+    </div>
     <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/70 to-black/40"></div>
     <div class="relative z-10 mx-auto flex max-w-6xl flex-col gap-6 px-4 py-32 text-white sm:px-6 lg:px-8">
       <p class="text-sm uppercase tracking-[0.3em] text-primary-light">Notre équipe</p>
@@ -34,7 +33,7 @@ const members = await getAllMembers();
         Une équipe engagée au service de la participation citoyenne
       </h1>
       <p class="max-w-3xl text-lg text-slate-100 sm:text-xl">
-        CitizenLab Bénin fédère une communauté de talents complémentaires—stratèges, créateurs de contenu, formateurs et activistes—
+        CitizenLab Cameroun fédère une communauté de talents complémentaires—stratèges, créateurs de contenu, formateurs et activistes—
         réunis pour développer des solutions innovantes et renforcer la démocratie participative.
       </p>
     </div>

@@ -3,7 +3,7 @@ import Layout from "~/layouts/PageLayout.astro";
 import Banner from "~/components/widgets/Banner.astro";
 import { getAllMagazines } from "~/utils/api.js";
 import { Image } from "astro:assets";
-import magazine_hero from "~/assets/images/magazine_hero.jpg";
+import magazine_hero from "~/assets/images/magazine.png";
 
 const magazines = await getAllMagazines();
 const latestMagazine = magazines?.[0];

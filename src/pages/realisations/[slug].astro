@@ -108,7 +108,7 @@ if (!realisationData) {
 const projet: Project = {
   title: realisationData.title,
   category: realisationData.categories?.nodes?.[0]?.name || 'Réalisation',
-  client: realisationData.realisationsMeta?.client || 'CitizenLab Bénin',
+  client: realisationData.realisationsMeta?.client || 'CitizenLab Cameroun',
   date: realisationData.date ? new Date(realisationData.date).toLocaleDateString('fr-FR', {
     year: 'numeric',
     month: 'long',
@@ -117,7 +117,7 @@ const projet: Project = {
   heroImage: realisationData.featuredImage?.node?.mediaItemUrl || '/assets/images/default.png',
   description: realisationData.excerpt 
     ? stripHTML(realisationData.excerpt)
-    : (realisationData.content ? stripHTML(realisationData.content.substring(0, 200) + '...') : 'Découvrez ce projet de CitizenLab Bénin'),
+    : (realisationData.content ? stripHTML(realisationData.content.substring(0, 200) + '...') : 'Découvrez ce projet de CitizenLab Cameroun'),
   challenge: realisationData.realisationsMeta?.challenge || 'Un projet innovant pour améliorer la participation citoyenne et renforcer l\'engagement des communautés locales.',
   solution: realisationData.realisationsMeta?.solution || 'Une solution développée en collaboration avec nos partenaires, utilisant les technologies modernes pour maximiser l\'impact.',
   technologies: realisationData.realisationsMeta?.technologies || ['Innovation sociale', 'Participation citoyenne', 'Numérique'],
@@ -151,7 +151,7 @@ const projet: Project = {
 };
 
 const metadata = {
-  title: `${projet.title} | Réalisations | CitizenLab Bénin`,
+  title: `${projet.title} | Réalisations | CitizenLab Cameroun`,
   description: projet.description,
 };
 ---
@@ -163,7 +163,7 @@ const metadata = {
           Étude de Cas
        </div>
        <h1 class="text-slate-400 dark:text-slate-600 font-mono text-sm tracking-widest uppercase">
-         CitizenLab Bénin — Archives
+         CitizenLab Cameroun — Archives
        </h1>
     </div>
   </section>
