@@ -80,7 +80,7 @@ export const footerData = {
     //{ text: 'Privacy Policy', href: getPermalink('/privacy') },
   ],
   socialLinks: [
-    { icon: "tabler:brand-x", href: "https://x.com/citizenlabsn?s=11" },
+    { icon: "tabler:brand-x", href: "https://x.com/citizenlabsn?s=111" },
     {
       icon: "tabler:brand-instagram",
       href: "https://www.instagram.com/citizenlab_senegal?igsh=MWc4cDYzNGc5em9pcA%3D%3D&utm_source=qr",
