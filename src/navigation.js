@@ -67,7 +67,7 @@ export const footerData = {
           text: "aclcameroun@africtivistes.org",
           href: "mailto:aclcameroun@africtivistes.org ",
         },
-        // { text: "+221 78 018 01 05", href: "tel:+221 78 018 01 05" },
+        { text: "+237 6 94 91 55 21", href: "tel:+237 6 94 91 07 73" },
         // { text: " Dakar, Sénégal ", href: "#" },
       ],
     },
