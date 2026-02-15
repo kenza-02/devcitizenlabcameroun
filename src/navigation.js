@@ -80,23 +80,23 @@ export const footerData = {
     //{ text: 'Privacy Policy', href: getPermalink('/privacy') },
   ],
   socialLinks: [
-    { icon: "tabler:brand-x", href: "https://x.com/citizenlabsn?s=111" },
+    { icon: "tabler:brand-x", href: "https://x.com/citizenlabc?s=21" },
     {
       icon: "tabler:brand-instagram",
-      href: "https://www.instagram.com/citizenlab_senegal?igsh=MWc4cDYzNGc5em9pcA%3D%3D&utm_source=qr",
+      href: "https://www.instagram.com/citizenlabcameroun/ ",
     },
     {
       icon: "tabler:brand-facebook",
-      href: "https://www.facebook.com/share/1AE5haRBVN/?mibextid=wwXIfr",
+      href: "https://web.facebook.com/profile.php?id=61580192840304 ",
     },
     {
       icon: "tabler:brand-linkedin",
-      href: "https://www.linkedin.com/company/citizenlab-senegal/",
+      href: "https://www.linkedin.com/company/citizenlab-cameroun/",
     },
-    {
-      icon: "tabler:brand-github",
-      href: "https://github.com/AfricTivistes/citizenlabsenegal",
-    },
+    // {
+    //   icon: "tabler:brand-github",
+    //   href: "https://github.com/AfricTivistes/citizenlabsenegal",
+    // },
   ],
   footNote: `
   <a href="https://www.africtivistes.com" target= '_blank'>
