@@ -8,7 +8,7 @@ import actualiteImg from "~/assets/images/actualite.jpg";
 const wpArticles = await getAllActualites();
 
 const metadata = {
-  title: "Actualités et medias",
+  title: "Blog",
 };
 
 const articles = wpArticles.map((post: any) => {
@@ -41,7 +41,7 @@ const articles = wpArticles.map((post: any) => {
 <Layout metadata={metadata}>
   <Banner
     title={metadata.title}
-    subtitle="Nous sommes là pour vous aider. N'hésitez pas à nous envoyer un message !"
+    subtitle="Retrouver ici, l'ensemble de nos blogs !"
   >
     <Image
       src={actualiteImg}
@@ -53,7 +53,7 @@ const articles = wpArticles.map((post: any) => {
   <section class="py-20 px-10" id="news-section">
     <div class="flex justify-between items-center flex-wrap gap-4">
       <h2 class="text-xl font-semibold text-green-800">
-        Nos dernières actualités
+        Nos dernièrs blogs
       </h2>
       
     </div>

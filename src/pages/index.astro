@@ -8,6 +8,7 @@ import MissionsSection from "~/components/widgets/apropos/Missions.astro";
 import ValuesSection from "~/components/widgets/apropos/Values.astro";
 import TestimonySection from "~/components/widgets/home/TestimonySection.astro";
 import PartenaireSection from "~/components/widgets/home/PartenaireSection.astro";
+import VideoSection from "~/components/widgets/home/VideoSection.astro";
 
 const metadata = {
   title:
@@ -19,6 +20,9 @@ const metadata = {
 <Layout metadata={metadata}>
   <!-- Hero Section -->
   <HeroSection />
+
+  <!-- Video Section -->
+  <VideoSection /> 
 
   <!-- Mission Section  -->
   <MissionSection />
@@ -36,7 +40,7 @@ const metadata = {
   <PartenaireSection/>
 
   <!-- Testimony Section -->
-  <TestimonySection />
+  <!-- <TestimonySection /> -->
 
 </Layout>
 

@@ -3,11 +3,11 @@ import Layout from '~/layouts/PageLayout.astro';
 import { Image } from 'astro:assets';
 import bootcamp_hero from '~/assets/images/bootcamp-atelier-bg.jpg';
 import Banner from '~/components/widgets/Banner.astro';
-import bootcamp1 from '~/assets/images/bootcamp1.jpg';
-import bootcamp2 from '~/assets/images/bootcamp2.jpg';
+import formation1_1 from '~/assets/images/formation1_1.jpg';
+import formation1_2 from '~/assets/images/formation1_2.jpg';
 
 const metadata = {
-    title: "Bootcamps & Ateliers - CitizenLab Sénégal",
+    title: "Bootcamps & Ateliers",
     description: "Développez vos compétences en Civic Tech, innovation sociale et engagement citoyen"
 };
 
@@ -15,75 +15,66 @@ const metadata = {
 const upcomingBootcamps = [
   {
     id: 1,
-    title: "Bootcamp Civic Tech Intensif",
-    type: "Bootcamp",
+    title: "Démocratie et participation citoyenne : La jeunesse de Porto-Novo à l’école du menu des engagements possibles",
+    type: "Formations",
     category: "Formation intensive",
-    duration: "5 jours",
+    duration: "1 jours",
     level: "Débutant à Intermédiaire",
     participants: "25 places",
-    date: "15-19 Janvier 2025",
-    location: "Dakar, Impact Hub",
-    image: bootcamp1.src,
-    description: "Apprenez à créer des solutions numériques pour résoudre des problèmes citoyens. Formation pratique avec projets réels et mentorat personnalisé.",
+    date: "06 juin 2026 ",
+    location: "Porto-Novo, Centre Songhai",
+    image: formation1_1.src,
+    description: "Une session de formation organisée par AfricTivistes CitizenLab Bénin s’est tenue ce samedi 25 mai 2024 au centre Songhai de Porto-Novo. Cet événement fait suite à une session précédente à Cotonou, dans le cadre d’une initiative visant à former les jeunes sur des questions essentielles de la démocratie et la participation citoyenne. Africtivistes CitizenLab Bénin",
     highlights: [
-      "Développement d'applications citoyennes",
-      "Design thinking & idéation collaborative",
-      "Pitch et présentation de projet",
-      "Mentorat par des experts du secteur",
-      "Certification de participation"
+      "democratie-2",
+      "engagement-citoyen",
+     
     ],
     program: [
-      { day: "Jour 1", topic: "Introduction à la Civic Tech", description: "Comprendre les enjeux et opportunités" },
-      { day: "Jour 2-3", topic: "Idéation & Prototypage", description: "Créer votre solution citoyenne" },
-      { day: "Jour 4", topic: "Développement", description: "Construire un MVP fonctionnel" },
-      { day: "Jour 5", topic: "Pitch Final", description: "Présenter votre projet devant un jury" }
+      { day: "Jour 1", topic: "la démocratie et la participation citoyenne.", description: "Comprendre les enjeux et opportunités" },
     ],
     status: "Inscriptions ouvertes",
     price: "Gratuit",
     spotsLeft: 12,
     featured: true,
     instructors: [
-      { name: "Moussa Sarr", role: "Expert Civic Tech"}
+      { name: "Teddy Larson ", role: "Expert Civic Tech et en Participation citoyen"  }
     ],
     requirements: [
-      "Ordinateur portable obligatoire",
       "Motivation et engagement total",
       "Aucune compétence technique requise"
     ]
   },
   {
     id: 2,
-    title: "Atelier Data & Transparence",
+    title: "1h avec ACLB : l’éveil de l’engagement citoyen chez les écoliers.",
     type: "Atelier",
     category: "Atelier pratique",
-    duration: "2 jours",
+    duration: "1 jours",
     level: "Intermédiaire",
-    participants: "15 places",
-    date: "8-9 Février 2025",
-    location: "Thiès, Sencampus",
-    image:bootcamp2.src,
-    description: "Maîtrisez la visualisation de données publiques et créez des dashboards interactifs pour plus de transparence.",
+    date: " 09 mai 2026",
+    location: "Calavi, Abomey-Calavi",
+    image:formation1_2.src,
+    description: "Dans le cadre de son engagement en faveur de la citoyenneté active, AfricTivistes Citizen Lab Bénin (ACLB) a lancé l’initiative « 1h avec ACLB ». Cette initiative, qui en était à son deuxième numéro, vise à sensibiliser et à inspirer les écoliers à s’engager activement dans leurs communautés et à participer activement à la construction d’une société",
     highlights: [
-      "Collecte et nettoyage de données",
+      "engagement-citoyen chez les écoliers",
       "Création de visualisations impactantes",
-      "Outils open source (Python, Tableau)",
-      "Projet de groupe concret"
+      "Renforcer les capacités des jeunes",
+      "la gouvernance, la gestion de la cité, le militantisme"
     ],
     program: [
-      { day: "Jour 1", topic: "Data Collection & Cleaning", description: "Techniques de traitement de données" },
-      { day: "Jour 2", topic: "Visualization & Storytelling", description: "Créer des dashboards percutants" }
+      { day: "Jour 1", topic: " l’éveil de l’engagement citoyen chez les écoliers.", description: " vise à sensibiliser et à inspirer les écoliers à s’engager activement dans leurs communautés et à participer" },
     ],
     status: "Inscriptions ouvertes",
     price: "Gratuit",
     spotsLeft: 5,
     featured: true,
     instructors: [
-      { name: "Cheikh Ba", role: "Data Scientist" }
+      { name: "Eboue Elaga", role: "Policitien" }
     ],
     requirements: [
-      "Notions de base en Excel/Google Sheets",
-      "Ordinateur portable",
-      "Intérêt pour l'open data"
+      "Motivation et engagement total",
+      "Aucune compétence technique requise"
     ]
   }
 ];
@@ -96,7 +87,7 @@ const themes = [
     color: "blue"
   },
   {
-    title: "Innovation Sociale",
+    title: "L'engagement citoyen",
     icon: "💡",
     description: "Solutions à impact social, entrepreneuriat",
     color: "purple"
@@ -112,12 +103,6 @@ const themes = [
     icon: "📱",
     description: "Stratégie digitale, réseaux sociaux",
     color: "pink"
-  },
-  {
-    title: "Robotique & IoT",
-    icon: "🤖",
-    description: "Arduino, capteurs, prototypage",
-    color: "orange"
   },
   {
     title: "Leadership",
@@ -163,7 +148,7 @@ function getThemeColor(color: string) {
   >
     <Image
       src={bootcamp_hero}
-      alt="Bootcamps et Ateliers CitizenLab Sénégal"
+      alt="Bootcamps et Ateliers CitizenLab Benin"
       class="w-full h-full object-cover absolute inset-0 border-0 z-0 scale-110 transition-transform duration-700"
     />
   </Banner>

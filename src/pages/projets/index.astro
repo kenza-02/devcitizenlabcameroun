@@ -5,71 +5,49 @@ import { Fragment } from 'astro/jsx-runtime';
 import etapeProjetImage from '~/assets/images/lesetapes.png';
 import defaultImg from '~/assets/images/default.png';
 import projetcours from '~/assets/images/projetencours.png';
+import { getAllProjets } from '~/utils/api';
 
 const metadata = {
-  title: "Projets - AfricTivistes CitizenLab Sénégal",
-  description: "Découvrez nos projets en cours, nos prototypes et nos impacts sur le terrain pour renforcer la participation citoyenne au Sénégal.",
+  title: "Projets - AfricTivistes CitizenLab Bénin",
+  description: "Découvrez nos projets en cours, nos prototypes et nos impacts sur le terrain pour renforcer la participation citoyenne au Bénin.",
   ignoreTitleTemplate: true,
 };
 
-// Données des projets selon le design Figma
-// Vous pouvez ajouter autant de projets que nécessaire ici
-const projets = [
-  {
-    id: 1,
-    titre: "Plateforme de Participation Rurale",
-    description: "Un outil numérique permettant aux citoyens des zones rurales de contribuer à la prise de décision locale et de suivre les projets communautaires.",
-    categorie: "Participation",
+// Récupération des projets depuis WordPress
+const wpProjets = await getAllProjets();
+
+// Transformation des données WordPress vers le format UI
+const projets = wpProjets.map((post: any, index: number) => {
+  // Nettoyer l'excerpt des balises HTML
+  const cleanDescription =
+    post.excerpt
+      ?.replace(/<[^>]*>/g, "") // Supprime toutes les balises HTML
+      ?.replace(/&nbsp;/g, " ") // Remplace les espaces insécables
+      ?.replace(/&#8230;/g, "...") // Remplace les entités HTML
+      ?.trim() || ""; // Supprime les espaces au début et à la fin
+
+  return {
+    slug: post.slug,
+    titre: post.title,
+    description: cleanDescription,
+    categorie: post.categories?.nodes?.[0]?.name ?? "Projet",
     statut: "En cours",
-    statutDetail: "en phase de test",
-    image: defaultImg,
-    imagePosition: "left", // borderRadius: 47px 0px 0px 0px
-  },
-  {
-    id: 2,
-    titre: "Programme Jeunes Innovateurs Civiques",
-    description: "Formation et accompagnement de 300 jeunes en innovation, data citoyenne, leadership communautaire et prototypage de solutions.",
-    categorie: "Innovation",
-    statut: "En cours",
-    statutDetail: "Co-conception",
-    image: defaultImg,
-    imagePosition: "right", // borderRadius: 0px 47px 0px 0px
-  },
-  {
-    id: 3,
-    titre: "Observatoire de la Transparence Publique",
-    description: "Plateforme de suivi et d'analyse des données publiques pour améliorer la transparence et la redevabilité des institutions.",
-    categorie: "Transparence",
-    statut: "En cours",
-    statutDetail: "Co-conception",
-    image: defaultImg,
-    imagePosition: "left",
-  },
-  // Ajoutez plus de projets ici si nécessaire
-  // Exemple :
-  // {
-  //   id: 4,
-  //   titre: "Nouveau Projet",
-  //   description: "Description du nouveau projet...",
-  //   categorie: "Environnement",
-  //   statut: "En cours",
-  //   statutDetail: "Prototypage",
-  //   image: defaultImg,
-  //   imagePosition: "right",
-  // },
-];
+    statutDetail: post.categories?.nodes?.[1]?.name ?? "En développement",
+    image: post.featuredImage?.node?.mediaItemUrl || defaultImg,
+    imagePosition: index % 2 === 0 ? "left" : "right",
+    date: new Date(post.date).toLocaleDateString("fr-FR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }),
+  };
+});
 
 // Configuration de la pagination (optionnel)
 const projetsParPage = 6; // Nombre de projets à afficher par page
 const pageActuelle = 1; // Page actuelle (peut être dynamique)
 
-// Alterner automatiquement la position des images si non spécifiée
-const projetsAvecPosition = projets.map((projet, index) => ({
-  ...projet,
-  imagePosition: projet.imagePosition || (index % 2 === 0 ? "left" : "right")
-}));
-
-const projetsAffiches = projetsAvecPosition; // Afficher tous les projets pour l'instant
+const projetsAffiches = projets; // Afficher tous les projets pour l'instant
 
 // Étapes du projet selon le design Figma
 const etapes = [
@@ -98,7 +76,6 @@ const etapes = [
     
     <!-- Contenu de la bannière -->
     <div class="relative z-30 mx-auto flex max-w-7xl flex-col gap-6 px-4 py-32 text-white sm:px-6 lg:px-8">
-      <p class="text-sm uppercase tracking-[0.3em] text-primary-light">Nos projets</p>
       <h1 class="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
         Des solutions innovantes pour renforcer la participation citoyenne
       </h1>
@@ -175,13 +152,21 @@ const etapes = [
                   ? "rounded-tl-[47px]" 
                   : "rounded-tr-[47px] lg:order-2"
               }`}>
-                <Image
-                  src={projet.image}
-                  alt={projet.titre}
-                  width={600}
-                  height={400}
-                  class="h-full w-full object-cover"
-                />
+                {typeof projet.image === 'string' ? (
+                  <img
+                    src={projet.image}
+                    alt={projet.titre}
+                    class="h-full w-full object-cover"
+                  />
+                ) : (
+                  <Image
+                    src={projet.image}
+                    alt={projet.titre}
+                    width={600}
+                    height={400}
+                    class="h-full w-full object-cover"
+                  />
+                )}
               </div>
 
               <!-- Contenu du projet -->
@@ -190,17 +175,6 @@ const etapes = [
                   ? "rounded-br-[47px] rounded-bl-[47px]" 
                   : "rounded-bl-[47px] rounded-br-[47px] lg:order-1"
               }`}>
-                <!-- Badge catégorie -->
-                <div class="mb-4">
-                  <span class={`inline-flex items-center rounded-full px-4 py-2 text-base md:text-lg font-semibold ${
-                    projet.categorie === "Participation" 
-                      ? "bg-primary text-white" 
-                      : "bg-[#FF6B35] text-white"
-                  }`}>
-                    {projet.categorie}
-                  </span>
-                </div>
-
                 <!-- Titre -->
                 <h3 class="text-3xl md:text-4xl font-bold text-black mb-4">{projet.titre}</h3>
                 
@@ -210,20 +184,10 @@ const etapes = [
                 <!-- Statut détaillé -->
                 <p class="text-base md:text-lg text-gray-600 mb-6">Statut : {projet.statutDetail}</p>
                 
-                <!-- Badge "En cours" et bouton -->
+                <!-- Bouton Découvrir -->
                 <div class="flex items-center gap-4 flex-wrap">
-                  <div class="flex items-center gap-2">
-                    <div class="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-                      <span class="text-white font-bold">{projet.id}</span>
-                    </div>
-                    <span class="px-4 py-2 bg-white border-2 border-primary text-primary text-base md:text-lg font-semibold rounded-lg">
-                      {projet.statut}
-                    </span>
-                  </div>
-                  
-                  <!-- Bouton Découvrir -->
                   <a
-                    href={`/projets/${projet.id}`}
+                    href={`/projets/${projet.slug}`}
                     class="inline-flex items-center rounded-lg bg-white border-2 border-primary px-6 py-2 text-lg md:text-xl font-semibold text-primary transition-all duration-200 hover:bg-primary hover:text-white"
                     style="border-radius: 10px;"
                   >

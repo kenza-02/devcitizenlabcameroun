@@ -2,11 +2,9 @@ import { getPermalink, getBlogPermalink } from "~/utils/permalinks";
 
 export const headerData = {
   links: [
-    { text: "Accueil", href: getPermalink("/") },
     {
       text: "Qui sommes nous",
       links: [
-        { text: "A propos", href: getPermalink("/a-propos") },
         { text: "Equipe", href: getPermalink("/equipe") },
         { text: "Partenaires", href: getPermalink("/partenaires") },
         { text: "FAQ", href: getPermalink("/faq") },
@@ -19,42 +17,19 @@ export const headerData = {
         { text: "Projets réalisés", href: getPermalink("/realisations") },
       ],
     },
+    { text: "Blog", href: getPermalink("/news") },
+    { text: "Magazine", href: getPermalink("/magazines") },
     {
       text: "Médias & Actualités",
       links: [
-        { text: "Actualités", href: getPermalink("/news") },
-        // { text: "Campagnes", href: getPermalink("campagnes", "category") },
-        // { text: "Blog / Opinions", href: getPermalink("blog", "category") },
         { text: "Podcasts", href: getPermalink("/podcasts") },
         { text: "Vidéos", href: getPermalink("videos") },
       ],
     },
     {
       text: "Formations & Ressources",
-      href: getPermalink("/formations/bootcamps-ateliers"),
-      // links: [
-      //   { text: "Bootcamps / Ateliers", href: getPermalink("/bootcamp") },
-      //   {
-      //     text: "Modules en ligne",
-      //     href: getPermalink("campagnes", "category"),
-      //   },
-      //   {
-      //     text: "Ressources pédagogiques",
-      //     href: getPermalink("blog", "category"),
-      //   },
-      // ],
+      href: getPermalink("/formations"),
     },
-    // {
-    //   text: "Participez / Implications",
-    //   links: [
-    //     { text: "Devenir partenaire", href: getPermalink("/news") },
-    //     {
-    //       text: "Appels à candidatures",
-    //       href: getPermalink("campagnes", "category"),
-    //     },
-    //   ],
-    // },
-    { text: "Contact", href: getPermalink("/contact") },
   ],
 };
 
@@ -64,8 +39,8 @@ export const footerData = {
       title: "CitizenLab",
       links: [
         {
-          text: "A Propos",
-          href: getPermalink("/a-propos"),
+          text: "Partenaires",
+          href: getPermalink("/partenaires"),
         },
         { text: "Equipe", href: getPermalink("/equipe") },
       ],
@@ -89,11 +64,11 @@ export const footerData = {
       title: "Nous Contacter",
       links: [
         {
-          text: "aclsenegal@africtivistes.org",
-          href: "mailto:aclsenegal@africtivistes.org ",
+          text: "aclbenin@africtivistes.org",
+          href: "mailto:aclbenin@africtivistes.org ",
         },
-        { text: "+221 78 018 01 05", href: "tel:+221 78 018 01 05" },
-        { text: " Dakar, Sénégal ", href: "#" },
+        // { text: "+221 78 018 01 05", href: "tel:+221 78 018 01 05" },
+        // { text: " Dakar, Sénégal ", href: "#" },
       ],
     },
   ],
