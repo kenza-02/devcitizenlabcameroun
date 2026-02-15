@@ -3,7 +3,7 @@ import Layout from '~/layouts/PageLayout.astro';
 import Features3 from '~/components/widgets/Features3.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
-import RealisationsImg from '~/assets/images/realisations.jpg';
+import RealisationsImg from '~/assets/images/realisations.png';
 import { getAllRealisations } from '~/utils/api';
 
 // Définir les interfaces de type pour les données
@@ -69,8 +69,8 @@ interface Project {
 }
 
 const metadata = {
-  title: 'Nos Réalisations | CitizenLab Bénin',
-  description: 'Découvrez nos projets réalisés en matière de participation citoyenne et d\'innovation sociale au Bénin.',
+  title: 'Nos Réalisations | CitizenLab Cameroun',
+  description: 'Découvrez nos projets réalisés en matière de participation citoyenne et d\'innovation sociale au Cameroun.',
 };
 
 // Récupérer les réalisations depuis l'API
@@ -94,7 +94,7 @@ const projetsData: Record<string, Project> = realisations.reduce((acc: Record<st
   acc[projectId] = {
     title: realisation.title,
     category: realisation.categories?.nodes?.[0]?.name || 'Réalisation',
-    client: realisation.realisationsMeta?.client || 'CitizenLab Bénin',
+    client: realisation.realisationsMeta?.client || 'CitizenLab Cameroun',
     date: realisation.date ? new Date(realisation.date).toLocaleDateString('fr-FR', {
       day: "numeric",
       year: 'numeric',
@@ -103,7 +103,7 @@ const projetsData: Record<string, Project> = realisations.reduce((acc: Record<st
     heroImage: realisation.featuredImage?.node?.mediaItemUrl || getDefaultImage(),
     description: realisation.excerpt 
       ? cleanExcerpt(realisation.excerpt)
-      : (realisation.content ? cleanExcerpt(realisation.content.substring(0, 150) + '...') : 'Découvrez ce projet innovant de CitizenLab Bénin'),
+      : (realisation.content ? cleanExcerpt(realisation.content.substring(0, 150) + '...') : 'Découvrez ce projet innovant de CitizenLab Cameroun'),
     challenge: 'Défi à relever pour améliorer la participation citoyenne',
     solution: 'Solution innovante développée avec nos partenaires',
     technologies: realisation.realisationsMeta?.technologies || ['Innovation sociale', 'Participation citoyenne', 'Numérique'],
@@ -139,7 +139,7 @@ const statsData = {
       alt="Nos Réalisations"
       class="absolute inset-0 w-full h-full object-cover"
     />
-    <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
+    <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/80 to-black/60" />
 
     <div class="relative h-full flex items-center justify-center text-center px-4">
       <div class="max-w-4xl mx-auto text-white">
@@ -147,7 +147,7 @@ const statsData = {
           Nos Réalisations
         </h1>
         <p class="text-xl md:text-2xl text-gray-200 leading-relaxed">
-          Découvrez les projets qui transforment la participation citoyenne au Bénin. De la conception à la mise en œuvre, chaque réalisation reflète notre engagement pour l'innovation sociale.
+          Découvrez les projets qui transforment la participation citoyenne au Cameroun. De la conception à la mise en œuvre, chaque réalisation reflète notre engagement pour l'innovation sociale.
         </p>
         <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
           <a
