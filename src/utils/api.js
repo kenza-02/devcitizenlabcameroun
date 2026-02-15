@@ -535,10 +535,6 @@ export async function getAllMembers() {
                         }
                         }
                         title
-                        fonctions {
-                          equipe
-                          fonction
-                        }
                         social {
                           facebook
                           instagram
