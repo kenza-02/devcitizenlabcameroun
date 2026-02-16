@@ -1,7 +1,9 @@
 ---
 import logo from '../assets/images/logo.svg';
 import Image from '~/components/common/Image.astro';
-
+import drapeau from '../assets/images/drapeau.png';
 ---
-<Image src={logo} alt="logo CitizenLab Cameroun" class="h-12" />
-<span class="self-center ml-1 mt-5 text-2xl md:text-xl font-bold whitespace-nowrap">CM</span>
+<div class="flex items-center justify-center space-x-2">
+  <Image src={logo} alt="logo CitizenLab Cameroun" class="h-12" />
+  <Image src={drapeau} alt="Drapeau du Cameroun" class="h-6 w-6" />
+</div>
